@@ -1,13 +1,12 @@
 package practicum;
 
-import org.hamcrest.MatcherAssert;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
-import static org.hamcrest.core.Is.is;
 
 public class HomePage {
     private final WebDriver driver;
@@ -86,7 +85,7 @@ public class HomePage {
     }
     // Метод для сравнения ответа на вопрос с ОР
     public void isCorrectText(String answer, String text) {
-        MatcherAssert.assertThat(answer, is(text));
+        Assert.assertEquals(text, answer);
     }
     // Геттеры для получения текса ответов
     public String getAnswer1() {

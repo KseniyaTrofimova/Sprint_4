@@ -1,9 +1,9 @@
 package practicum;
 
-import org.hamcrest.MatcherAssert;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import static org.hamcrest.CoreMatchers.is;
+
 public class OrderPage {
     private final WebDriver driver;
     private final By orderHeader = By.xpath(".//div[text()='Для кого самокат']");
@@ -46,7 +46,7 @@ public class OrderPage {
     }
     //Метод для проверки открытия страницы
     public void isPageOpen(String headerText, String text) {
-        MatcherAssert.assertThat(headerText, is(text));
+        Assert.assertEquals(text, headerText);
     }
     //Метод для принятия куки
     public void acceptCookieButtonClick() {

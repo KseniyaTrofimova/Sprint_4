@@ -9,7 +9,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import practicum.HomePage;
-import java.time.Duration;
 import static practicum.Resources.*;
 
 public class FAQTest {
