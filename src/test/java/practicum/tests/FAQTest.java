@@ -8,8 +8,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import practicum.HomePage;
-import static practicum.Resources.*;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+
+import static practicum.tests.Resources.*;
 
 public class FAQTest {
     private WebDriver driver;
