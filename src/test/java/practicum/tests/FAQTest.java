@@ -1,59 +1,62 @@
 package practicum.tests;
 
-import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import practicum.HomePage;
 
 import java.time.Duration;
 
-import static practicum.tests.Resources.*;
+import static practicum.Resources.*;
 
+@RunWith(Parameterized.class)
 public class FAQTest {
-    private WebDriver driver;
+
+    @Rule
+    public WebDriverFactory factory = new WebDriverFactory();
+    // Параметры для каждого теста
+    private final int questionNumber;
+    private final String expectedAnswer;
+
+    public FAQTest(int questionNumber, String expectedAnswer) {
+        this.questionNumber = questionNumber;
+        this.expectedAnswer = expectedAnswer;
+    }
+    // Данные для тестов
+    @Parameterized.Parameters(name = "Вопрос #{0}: проверка ответа")
+    public static Object[][] testData() {
+        return new Object[][]{
+                {1, COST_AND_PAYMENT_ANSWER_TEXT},
+                {2, MULTIPLE_SCOOTERS_ANSWER_TEXT},
+                {3, RENTAL_TIME_CALCULATION_ANSWER_TEXT},
+                {4, TODAY_ORDER_ANSWER_TEXT},
+                {5, ORDER_EXTENSION_ANSWER_TEXT},
+                {6, CHARGER_INCLUDED_ANSWER_TEXT},
+                {7, ORDER_CANCELLATION_ANSWER_TEXT},
+                {8, OUTSIDE_MKAD_DELIVERY_ANSWER_TEXT}
+        };
+    }
 
     @Test
-    public void FAQCorrectAnswerText() {
-        // Создание веб-драйвер для Google Chrome
-        driver = new ChromeDriver();
-        //Создание веб-драйвера для Firefox
-        //driver = new FirefoxDriver();
-        //Неявное ожидание
-        //driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        //Открытие домашней страницы Яндекс Самокат
-        driver.get("https://qa-scooter.praktikum-services.ru");
-        //Скролл страницы до таблицы с вопросами
-        WebElement tableFAQ = driver.findElement(By.xpath(".//div[@class='accordion']"));
-        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", tableFAQ);
-        //Создание объекта класса с домашней страницей
-        HomePage objHomePage = new HomePage(driver);
-        objHomePage.CookieButtonClick();
-        //Проверка соответствия текста ответа с ОР
-        objHomePage.clickQuestion1();
-        objHomePage.isCorrectText(objHomePage.getAnswer1(), answer1Text);
-        objHomePage.clickQuestion2();
-        objHomePage.isCorrectText(objHomePage.getAnswer2(), answer2Text);
-        objHomePage.clickQuestion3();
-        objHomePage.isCorrectText(objHomePage.getAnswer3(), answer3Text);
-        objHomePage.clickQuestion4();
-        objHomePage.isCorrectText(objHomePage.getAnswer4(), answer4Text);
-        objHomePage.clickQuestion5();
-        objHomePage.isCorrectText(objHomePage.getAnswer5(), answer5Text);
-        objHomePage.clickQuestion6();
-        objHomePage.isCorrectText(objHomePage.getAnswer6(), answer6Text);
-        objHomePage.clickQuestion7();
-        objHomePage.isCorrectText(objHomePage.getAnswer7(), answer7Text);
-        objHomePage.clickQuestion8();
-        objHomePage.isCorrectText(objHomePage.getAnswer8(), answer8Text);
-    }
-    @After
-    public void tearDown() {
-        //Закрытие браузера
-        driver.quit();
+    public void checkFAQAnswer() {
+        var driver = factory.getDriver();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        HomePage homePage = new HomePage(driver);
+
+        homePage.openMainPage();
+        homePage.CookieButtonClick();
+        homePage.scrollDownFAQ();
+        // Кликаем по вопросу
+        homePage.clickQuestion(questionNumber);
+        // Ждём появления ответа
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.id("accordion__panel-" + (questionNumber - 1))));
+        // Получаем и проверяем текст ответа
+        String actualAnswer = homePage.getAnswer(questionNumber);
+        homePage.isCorrectText(actualAnswer, expectedAnswer);
     }
 }

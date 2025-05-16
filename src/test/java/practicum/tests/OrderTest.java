@@ -1,17 +1,16 @@
 package practicum.tests;
 
-import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import practicum.HomePage;
+import practicum.OrderPage;
 
-import static practicum.tests.Resources.confirmHeader;
+import static practicum.Resources.CONFIRM_HEADER;
 
 @RunWith(Parameterized.class)
 public class OrderTest {
-    private WebDriver driver;
     private final String name;
     private final String surname;
     private final String address;
@@ -34,7 +33,7 @@ public class OrderTest {
         this.comment = comment;
     }
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "Order: {0} {1}, {3} station, {7} color")
     public static Object[][] getDateSetForOrder() {
         return new Object[][] {
                 {"Ксения", "Трофимова", "г. Москва, ул. Пушкина, д.10", "Театральная", "89130154567", "01.02.2026", "сутки", "чёрный жемчуг", "Не звонить в дверь"},
@@ -42,21 +41,16 @@ public class OrderTest {
         };
     }
 
+    @Rule
+    public WebDriverFactory factory = new WebDriverFactory();
+
     @Test
     public void OrderPositiveTest() {
-        //Создание веб-драйвера для Chrome
-        driver = new ChromeDriver();
-        //Создание веб-драйвер для Firefox
-        //driver = new FirefoxDriver();
-        //Открытие домашней страницы Яндекс Самокат
-        driver.get("https://qa-scooter.praktikum-services.ru");
-        //Создание объекта класса с домашней страницей
+        var driver = factory.getDriver();
         HomePage objHomePage = new HomePage(driver);
-        //Клик по кнопке заказать на чердаке
+        objHomePage.openMainPage();
         objHomePage.clickHeaderOrderButton();
-        //Создан объект класса со страницей заказа
         OrderPage objOrderPage = new OrderPage(driver);
-        //Принятие куки
         objOrderPage.acceptCookieButtonClick();
         //Позитивный сценарий для оформления заказа
         objOrderPage.setName(name);
@@ -72,12 +66,6 @@ public class OrderTest {
         objOrderPage.clickOrderCreateButton();
         objOrderPage.clickOrderConfirmButton();
         //Проверка, что открылась страница успешного создания заказа
-        objOrderPage.isPageOpen(objOrderPage.getConfirmHeader() ,confirmHeader);
-    }
-
-    @After
-    public void tearDown() {
-        //Закрытие браузера
-        driver.quit();
+        objOrderPage.isPageOpen(objOrderPage.getConfirmHeader() ,CONFIRM_HEADER);
     }
 }
