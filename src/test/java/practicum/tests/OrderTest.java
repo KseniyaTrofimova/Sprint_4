@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import practicum.HomePage;
 import practicum.OrderPage;
-
 import static practicum.Resources.CONFIRM_HEADER;
 
 @RunWith(Parameterized.class)
@@ -46,26 +45,20 @@ public class OrderTest {
 
     @Test
     public void OrderPositiveTest() {
-        var driver = factory.getDriver();
-        HomePage objHomePage = new HomePage(driver);
-        objHomePage.openMainPage();
-        objHomePage.clickHeaderOrderButton();
-        OrderPage objOrderPage = new OrderPage(driver);
-        objOrderPage.acceptCookieButtonClick();
-        //Позитивный сценарий для оформления заказа
-        objOrderPage.setName(name);
-        objOrderPage.setSurname(surname);
-        objOrderPage.setAddress(address);
-        objOrderPage.setSubway(subway);
-        objOrderPage.setPhoneNumber(phoneNumber);
-        objOrderPage.clickOrderNextButton();
-        objOrderPage.setDate(date);
-        objOrderPage.setRentalPeriod(rentalPeriod);
-        objOrderPage.setColor(color);
-        objOrderPage.setComment(comment);
-        objOrderPage.clickOrderCreateButton();
-        objOrderPage.clickOrderConfirmButton();
-        //Проверка, что открылась страница успешного создания заказа
-        objOrderPage.isPageOpen(objOrderPage.getConfirmHeader() ,CONFIRM_HEADER);
-    }
+    var driver = factory.getDriver();
+
+    new HomePage(driver)
+            .openMainPage()
+            .clickHeaderOrderButton();
+
+    OrderPage objOrderPage = new OrderPage(driver);
+    new OrderPage(driver)
+            .acceptCookieButtonClick()
+            .fillFirstOrderForm(name, surname, address, subway, phoneNumber)
+            .clickOrderNextButton()
+            .fillSecondOrderForm(date, rentalPeriod, color, comment)
+            .clickOrderCreateButton()
+            .clickOrderConfirmButton()
+            .isPageOpen(objOrderPage.getConfirmHeader(), CONFIRM_HEADER);
+}
 }

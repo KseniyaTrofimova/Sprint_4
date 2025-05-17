@@ -4,13 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import practicum.HomePage;
-
-import java.time.Duration;
-
 import static practicum.Resources.*;
 
 @RunWith(Parameterized.class)
@@ -26,6 +20,7 @@ public class FAQTest {
         this.questionNumber = questionNumber;
         this.expectedAnswer = expectedAnswer;
     }
+
     // Данные для тестов
     @Parameterized.Parameters(name = "Вопрос #{0}: проверка ответа")
     public static Object[][] testData() {
@@ -44,19 +39,12 @@ public class FAQTest {
     @Test
     public void checkFAQAnswer() {
         var driver = factory.getDriver();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         HomePage homePage = new HomePage(driver);
-
         homePage.openMainPage();
         homePage.CookieButtonClick();
         homePage.scrollDownFAQ();
-        // Кликаем по вопросу
         homePage.clickQuestion(questionNumber);
-        // Ждём появления ответа
-        wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.id("accordion__panel-" + (questionNumber - 1))));
-        // Получаем и проверяем текст ответа
-        String actualAnswer = homePage.getAnswer(questionNumber);
+        String actualAnswer = homePage.getAnswerText(questionNumber);
         homePage.isCorrectText(actualAnswer, expectedAnswer);
     }
 }

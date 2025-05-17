@@ -44,8 +44,9 @@ public class OrderPage {
         Assert.assertEquals(text, headerText);
     }
     //Метод для принятия куки
-    public void acceptCookieButtonClick() {
+    public OrderPage acceptCookieButtonClick() {
         driver.findElement(acceptCookieButton).click();
+        return this;
     }
     //Метод для заполнения поля Имя
     public void setName(String name) {
@@ -70,8 +71,9 @@ public class OrderPage {
         driver.findElement(phoneNumberField).sendKeys(phoneNumber);
     }
     //Метод для перехода ко второй странице создания заказа
-    public void clickOrderNextButton() {
+    public OrderPage clickOrderNextButton() {
         driver.findElement(orderNextButton).click();
+        return this;
     }
     //Метод для заполнения поля Дата доставки
     public void setDate(String date) {
@@ -94,11 +96,31 @@ public class OrderPage {
         driver.findElement(commentField).sendKeys(comment);
     }
     //Метод для перехода к подтверждению заказа
-    public void clickOrderCreateButton() {
+    public OrderPage clickOrderCreateButton() {
         driver.findElement(orderCreateButton).click();
+        return this;
     }
     //Метод для подтверждения заказа
-    public void clickOrderConfirmButton() {
+    public OrderPage clickOrderConfirmButton() {
         driver.findElement(orderConfirmButton).click();
+        return this;
+    }
+    public OrderPage fillFirstOrderForm(String name, String surname, String address,
+                                        String subway, String phoneNumber) {
+        setName(name);
+        setSurname(surname);
+        setAddress(address);
+        setSubway(subway);
+        setPhoneNumber(phoneNumber);
+        return this;
+    }
+
+    public OrderPage fillSecondOrderForm(String date, String rentalPeriod,
+                                         String color, String comment) {
+        setDate(date);
+        setRentalPeriod(rentalPeriod);
+        setColor(color);
+        setComment(comment);
+        return this;
     }
 }
